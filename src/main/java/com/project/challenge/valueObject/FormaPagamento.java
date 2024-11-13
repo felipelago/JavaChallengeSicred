@@ -1,22 +1,17 @@
-package com.project.challenge.entity;
+package com.project.challenge.valueObject;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@Entity
-public class FormaPagamento implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FPG_id", unique = true)
-    private Long id;
+@Embeddable
+public class FormaPagamento {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "FPG_tipo")

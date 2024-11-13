@@ -1,13 +1,13 @@
 package com.project.challenge.entity;
 
+import com.project.challenge.valueObject.Descricao;
+import com.project.challenge.valueObject.FormaPagamento;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -26,34 +26,8 @@ public class Transacao implements Serializable {
     @Embedded
     private Descricao descricao;
 
-    @OneToOne
-    @JoinColumn(name = "FPG_id")
+    @Embedded
     private FormaPagamento formaPagamento;
-
-    @Getter
-    @Setter
-    @Embeddable
-    public static class Descricao {
-        @Column(name = "DES_valor")
-        private BigDecimal valor;
-        @Column(name = "DES_data_hora")
-        private LocalDateTime dataHora;
-        @Column(name = "DES_estabelecimento")
-        private String estabelecimento;
-        @Column(name = "DES_nsu")
-        private String nsu;
-        @Column(name = "DES_codigo_autorizador")
-        private String codigoAutorizacao;
-        @Enumerated(EnumType.STRING)
-        @Column(name = "DES_status")
-        private StatusTransacao status;
-    }
-
-    public enum StatusTransacao {
-        AUTORIZADO,
-        NEGADO,
-        CANCELADO;
-    }
 
 
 }
