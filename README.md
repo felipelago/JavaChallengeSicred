@@ -12,6 +12,7 @@ Desafio Processo Seletivo da Sicred
   <a href="#star-requisitos">Requisitos</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;  
   <a href="#rocket-começando">Começando</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#computer-iniciando-o-projeto">Iniciando o Projeto</a>&nbsp;&nbsp;&nbsp;
+  <a href="#computer-testando-os-endpoints">Testando os Endpoints</a>&nbsp;&nbsp;&nbsp;
 </p>
 
 ## :page_with_curl: Sobre
@@ -52,7 +53,7 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
   # Rodar a aplicação:
   $ mvn spring-boot:run
 ```
-## 🖱️ Testando os Endpoints
+## :computer: Testando os Endpoints
 Para testar os endpoints, por favor siga nestá ordem (lembrando que H2 é um banco em memória, então quando reiniciar a aplicação ele vai zerar os dados):
 - **Step 1: Criar um cliente**
 
