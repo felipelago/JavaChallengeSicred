@@ -47,11 +47,10 @@ public class PagamentoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(transacao);
     }
 
-//    @PostMapping("/{id}/estorno")
-//    public ResponseEntity<Transacao> estornarPagamento(@PathVariable Long id) {
-//        Transacao transacao = pagamentoService.estornarPagamento(id);
-//        return ResponseEntity.ok(transacao);
-//    }
-
+    @PostMapping("/estornar/{id}")
+    public ResponseEntity<Transacao> estornarPagamento(@PathVariable Long id) {
+        Transacao transacao = pagamentoService.estornarPagamento(id);
+        return ResponseEntity.ok(transacao);
+    }
 
 }

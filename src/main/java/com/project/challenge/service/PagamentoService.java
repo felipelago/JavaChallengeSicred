@@ -1,15 +1,21 @@
 package com.project.challenge.service;
 
 import com.project.challenge.dto.TransacaoDto;
+import com.project.challenge.entity.Cliente;
 import com.project.challenge.entity.Transacao;
+import com.project.challenge.exception.ClienteNaoEncontradoException;
+import com.project.challenge.exception.TransacaoNaoEncontradaException;
+import com.project.challenge.repository.ClienteRepository;
 import com.project.challenge.repository.TransacaoRepository;
 import com.project.challenge.valueObject.Descricao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -18,36 +24,38 @@ public class PagamentoService {
 
 
     private final TransacaoRepository transacaoRepository;
+    private final ClienteRepository clienteRepository;
 
     public List<Transacao> listarTransacoes() {
-        List<Transacao> transacoes = transacaoRepository.findAll();
-        if (transacoes.isEmpty()) {
-            throw new RuntimeException("Nenhuma transação encontrada");
-        }
-        return transacoes;
+        return transacaoRepository.findAll();
     }
 
     public Transacao consultarTransacaoPorId(Long id) {
         return transacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+                .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação com ID " + id + " não encontrada"));
     }
 
     public Transacao consultarEstornoById(Long id) {
         return transacaoRepository.findEstornoById(id)
-                .orElseThrow(() -> new RuntimeException("Estorno com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new TransacaoNaoEncontradaException("Estorno com ID " + id + " não encontrado"));
     }
 
     public List<Transacao> consultarEstornos() {
-        List<Transacao> estornos = transacaoRepository.findAllEstorno();
-        if (estornos.isEmpty()) {
-            throw new RuntimeException("Nenhum estorno encontrado");
-        }
-        return estornos;
+        return transacaoRepository.findAllEstorno();
     }
 
-    //TODO - implementar uma validação para checar se o cliente tem limite no cartão de acordo com o valor da compra para utilizar o NEGADO
+    //TODO - Criar as validações ou uma nova exception para esse método
     @Transactional
     public Transacao realizarPagamento(TransacaoDto transacaoDto) {
+        //Step 1 - Verificar o cliente pelo numero do cartão e verificar se tem limite
+        Cliente cliente = clienteRepository.findByNumeroCartao(transacaoDto.getCartao())
+                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente com número de cartão " + transacaoDto.getCartao() + " não encontrado"));
+
+        BigDecimal valorTransacao = transacaoDto.getDescricao().getValor();
+        Descricao.StatusTransacao status = valorTransacao.compareTo(cliente.getLimiteCredito()) > 0 ?
+                Descricao.StatusTransacao.NEGADO : Descricao.StatusTransacao.AUTORIZADO;
+
+        //Step 2 - Salva a transação sendo negado ou autorizado
         Transacao transacao = new Transacao();
         transacao.setCartao(transacaoDto.getCartao());
 
@@ -58,7 +66,7 @@ public class PagamentoService {
         descricao.setEstabelecimento(transacaoDto.getDescricao().getEstabelecimento());
         descricao.setNsu(gerarNsu());
         descricao.setCodigoAutorizacao(gerarCodigoAutorizacao());
-        descricao.setStatus(Descricao.StatusTransacao.AUTORIZADO);
+        descricao.setStatus(status);
 
         transacao.setDescricao(descricao);
         transacao.setFormaPagamento(transacaoDto.getFormaPagamento());
@@ -76,5 +84,16 @@ public class PagamentoService {
     private String gerarCodigoAutorizacao() {
         Random random = new Random();
         return String.format("%09d", random.nextInt(1000000000));
+    }
+
+    public Transacao estornarPagamento(Long id) {
+        Optional<Transacao> transacaoEstorno = transacaoRepository.findById(id);
+        if (transacaoEstorno.isPresent()) {
+            Transacao transacao = transacaoEstorno.get();
+            transacao.getDescricao().setStatus(Descricao.StatusTransacao.CANCELADO);
+            return transacaoRepository.save(transacao);
+        } else {
+            throw new TransacaoNaoEncontradaException("Transação não encontrada");
+        }
     }
 }
