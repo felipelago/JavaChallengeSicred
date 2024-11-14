@@ -57,7 +57,7 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
 Para testar os endpoints, por favor siga nestá ordem (lembrando que H2 é um banco em memória, então quando reiniciar a aplicação ele vai zerar os dados):
 - **Step 1: Criar um cliente**
 
-Endpoint: /api/v1/cliente<br>
+Endpoint: /api/v1/cliente/cadastrar<br>
 Método: POST<br>
 Exemplo de Request Body:
 ```JSON
