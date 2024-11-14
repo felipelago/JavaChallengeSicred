@@ -54,14 +54,28 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
 ```
 ## 🖱️ Testando os Endpoints
 Para testar os endpoints, por favor siga nestá ordem (lembrando que H2 é um banco em memória, então quando reiniciar a aplicação ele vai zerar os dados):
-Step 1: Criar um cliente
+- Step 1: Criar um cliente
+
 Endpoint: /api/v1/cliente
 Método: POST
 Exemplo de Request Body:
+```JSON
+{
+    "nome": "João da Silva",
+    "cpf": "12345678901",
+    "limiteCredito": 1500.00,
+    "numeroCartao": "1234567812345678"
+}
+```
+- Step 2: Crie uma transação (ou um pagamento)
+Endpoint: /api/v1/pagamento
+Método: POST
+Exemplo de Request Body:
+```JSON
 {
   "cartao": "1234567812345678",
   "descricao": {
-    "valor": 2000.00,
+    "valor": 200.00,
     "estabelecimento": "PetShop Mundo cão"
   },
   "formaPagamento": {
@@ -70,3 +84,26 @@ Exemplo de Request Body:
   }
 }
 
+```
+
+- Step 3: Estornar um pagamento/transação
+Descrição: Estornar um pagamento
+Endpoint: api/v1/pagamento/estornar/{id}
+Método: PATCH
+
+- Outros Endpoints na aplicação:
+Descrição: Listar todos os pagamentos/transações
+Endpoint: api/v1/pagamento/transacoes
+Método: GET
+
+Descrição: Listar um pagamento/transação por ID
+Endpoint: api/v1/pagamento/transacao/{id}
+Método: GET
+
+Descrição: Listar todos os estornos (todos os pagamentos/transações que estão com o status CANCELADO)
+Endpoint: api/v1/pagamento/estornos
+Método: GET
+
+Descrição: Listar a transação estornada pelo ID
+Endpoint: api/v1/pagamento/estorno/{id}
+Método: GET
