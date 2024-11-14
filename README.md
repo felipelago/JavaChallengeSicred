@@ -28,7 +28,7 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
 
 **junit-jupiter-api - 5.7.2**: Utilizado para fazer os testes unitários da aplicação.
 
-**lombok**: Utilizado para gerar getters, setters e injeção de dependências.
+**lombok**: Utilizado para gerar Getters, Setters, construtores, reduzir Boilerplate e injeção de dependências.
 
 
 ## :star: Requisitos
