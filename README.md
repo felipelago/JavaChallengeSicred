@@ -15,7 +15,7 @@ Desafio Processo Seletivo da Sicred
 </p>
 
 ## :page_with_curl: Sobre
-Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvida com Java e Spring Boot, o H2 para a persistência de dados com Spring Data, o spring-validation para fazer as validações necessárias da Api.
+Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvida com Java e Spring Boot, o H2 para a persistência de dados com Spring Data, o spring-validation para fazer as validações necessárias da Api. O fluxo foi um pouco alterado em relação ao exigido, implementei uma nova entidade chamada cliente, onde você cadastra alguns dados, incluindo o limite de crédito, a data e hora também são gerados no backend, não sendo necessário o usuário informar a hora, os códigos nsu e código de autorização eu gero números aleatórios já que não tenho como me conectar a API do ministério da fazenda. A entidade Transacao possui 2 value objects que são 'Descricao' e 'FormaPagamento', dessa forma além de ficar mais módular, é possível reutilizar esses value objects em outras futuras entidades caso necessário. Foi feito um tratamento de erros centrao (GlobalHandlerException) para tratar as exceções, pode ser melhorado, mas é funcional. Os testes unitários foram utilizados Junit(5.7.2) e Mockito.
 
 ## :books: **Dependencias**
 **spring-boot-starter-web**: Utilizado para tornar a aplicação web.
@@ -26,7 +26,9 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
 
 **spring-boot-devtools**: Utilizado para o LiveReload do servidor.
 
-**junit-vintage-engine**: Utilizado para fazer os testes unitários da aplicação.
+**junit-jupiter-api - 5.7.2**: Utilizado para fazer os testes unitários da aplicação.
+
+**lombok**: Utilizado para gerar getters, setters e injeção de dependências.
 
 
 ## :star: Requisitos
@@ -50,3 +52,21 @@ Este repositório contém um sistema baseado em arquitetura Rest Api desenvolvid
   # Rodar a aplicação:
   $ mvn spring-boot:run
 ```
+## 🖱️ Testando os Endpoints
+Para testar os endpoints, por favor siga nestá ordem (lembrando que H2 é um banco em memória, então quando reiniciar a aplicação ele vai zerar os dados):
+Step 1: Criar um cliente
+Endpoint: /api/v1/cliente
+Método: POST
+Exemplo de Request Body:
+{
+  "cartao": "1234567812345678",
+  "descricao": {
+    "valor": 2000.00,
+    "estabelecimento": "PetShop Mundo cão"
+  },
+  "formaPagamento": {
+    "tipo": "AVISTA",
+    "parcelas": 1
+  }
+}
+
