@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -20,14 +21,15 @@ public class Transacao implements Serializable {
     @Column(name = "TRA_id", unique = true)
     private Long id;
 
-    @Column(name = "TRA_cartao")
+    @Column(name = "TRA_cartao", nullable = false)
+    @NotNull
     private String cartao;
 
     @Embedded
+    @NotNull
     private Descricao descricao;
 
     @Embedded
+    @NotNull
     private FormaPagamento formaPagamento;
-
-
 }

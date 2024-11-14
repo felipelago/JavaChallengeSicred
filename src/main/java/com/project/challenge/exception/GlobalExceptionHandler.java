@@ -1,5 +1,6 @@
 package com.project.challenge.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,4 +49,25 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    //TODO - Corrigir o método
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        Map<String, String> error = new HashMap<>();
+
+        String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+
+        if (message != null) {
+            if (message.toLowerCase().contains("cli_cpf")) {
+                error.put("error", "CPF já cadastrado no sistema.");
+            } else {
+                error.put("error", "Violação de restrição de unicidade em um campo: " + message);
+            }
+        } else {
+            error.put("error", "Erro de integridade dos dados.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
 }

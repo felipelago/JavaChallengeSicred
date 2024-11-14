@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,12 +43,12 @@ public class PagamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Transacao> realizarPagamento(@RequestBody TransacaoDto transacaoDto) {
+    public ResponseEntity<Transacao> realizarPagamento(@Valid @RequestBody TransacaoDto transacaoDto) {
         Transacao transacao = pagamentoService.realizarPagamento(transacaoDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(transacao);
     }
 
-    @PostMapping("/estornar/{id}")
+    @PatchMapping("/estornar/{id}")
     public ResponseEntity<Transacao> estornarPagamento(@PathVariable Long id) {
         Transacao transacao = pagamentoService.estornarPagamento(id);
         return ResponseEntity.ok(transacao);
