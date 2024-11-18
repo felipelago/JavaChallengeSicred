@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,18 +49,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    //TODO - Corrigir o método para identificar quando o CPF já está cadastrado e não estourar um internal server error
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Map<String, String> error = new HashMap<>();
 
-        String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+        // Captura a mensagem da causa raiz, se existir
+        String message = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
 
         if (message != null) {
+            // Verifica se a mensagem contém "cli_cpf", indicando violação de unicidade no CPF
             if (message.toLowerCase().contains("cli_cpf")) {
                 error.put("error", "CPF já cadastrado no sistema.");
+            } else if (message.toLowerCase().contains("unique")) {
+                error.put("error", "Violação de restrição de unicidade em um campo.");
             } else {
-                error.put("error", "Violação de restrição de unicidade em um campo: " + message);
+                error.put("error", "Erro de integridade dos dados: " + message);
             }
         } else {
             error.put("error", "Erro de integridade dos dados.");
@@ -69,5 +71,13 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Map<String, String>> handleNullPointerException(NullPointerException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Um valor obrigatório está ausente ou é nulo.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 
 }
