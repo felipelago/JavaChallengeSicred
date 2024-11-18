@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class Descricao {
 
     @Column(name = "DES_valor")
+    @NotNull(message = "O valor da transação é obrigatório")
     private BigDecimal valor;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
@@ -24,6 +26,7 @@ public class Descricao {
     private LocalDateTime dataHora;
 
     @Column(name = "DES_estabelecimento")
+    @NotNull(message = "O estabelecimento é obrigatório")
     private String estabelecimento;
 
     @Column(name = "DES_nsu")
