@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    //TODO - Corrigir o método
+    //TODO - Corrigir o método para identificar quando o CPF já está cadastrado e não estourar um internal server error
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Map<String, String> error = new HashMap<>();

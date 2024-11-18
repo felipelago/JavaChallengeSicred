@@ -44,7 +44,7 @@ public class PagamentoService {
         return transacaoRepository.findAllEstorno();
     }
 
-    //TODO - Criar as validações ou uma nova exception para esse método
+    //TODO - Corrigir a exception para esse método
     @Transactional
     public Transacao realizarPagamento(TransacaoDto transacaoDto) {
         //Step 1 - Verificar o cliente pelo numero do cartão e verificar se tem limite
