@@ -69,6 +69,7 @@ Exemplo de Request Body:
 }
 ```
 - **Step 2: Crie uma transação (ou um pagamento)**
+  obs: caso o valor seja maior que o limiteCredito, a transação será criada com Status Negado
 
 Endpoint: /api/v1/pagamento<br>
 Método: POST<br>
